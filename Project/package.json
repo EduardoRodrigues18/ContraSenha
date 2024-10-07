@@ -1,5 +1,5 @@
 {
-  "name": "project",
+  "name": "boostrap_project",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -7,5 +7,9 @@
   },
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "express": "^4.21.0",
+    "node-firebird": "^1.1.9"
+  }
 }

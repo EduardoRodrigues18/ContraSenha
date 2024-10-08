@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Portifolio</title>
+  <title>Menu</title>
   <link rel="stylesheet" href="css/bootstrap.min.css">
   <link rel="stylesheet" href="css/styles.css">
 
@@ -18,27 +18,37 @@
   </nav>
   <header class="page-header gradient">
     <div class="container">
-      <div class="row aling-items-center justify-content-end">
+      <div class="row aling-items-left justify-content-end">
         <div class="col-md-6">
-          <h1  class="display-6"><b>Gerador de Contra-Senha</b></h1>
+          <h1 class="display-6"><b>Gerador de Contra-Senha</b></h1>
           <div>
-            <div class="input-group flex-nowrap">
-              <input type="text" class="form-control" placeholder="Contra-Senha" aria-label="Username" aria-describedby="addon-wrapping" id="InputContraSenha">
-              
-            </div>
             <div class="dropdown">
-                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  <b>Duração da Contra-Senha</b>
-                </a>
-                <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="#">1 minuto</a></li>
-                  <li><a class="dropdown-item" href="#">10 minutos</a></li>
-                  <li><a class="dropdown-item" href="#">30 minutos</a></li>
-                </ul>
-              </div>
+              <a id="dropdownUser" class="btn btn-secondary dropdown-toggle" href="#" role="button"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                <b>Usuário</b>
+              </a>
+              <ul class="dropdown-menu">
+                <!-- Os itens serão gerados dinamicamente aqui -->
+              </ul>
+            </div>
+
+            <div class="dropdown">
+              <a id="dropdownDuration" class="btn btn-secondary dropdown-toggle" href="#" role="button"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                <b>Duração da Contra-Senha</b>
+              </a>
+              <ul class="dropdown-menu">
+                <!-- Os itens serão gerados dinamicamente aqui -->
+              </ul>
+            </div>
+            <div class="input-group flex-nowrap">
+              <input type="text" class="form-control" placeholder="Contra-Senha" aria-label="Username"
+                aria-describedby="addon-wrapping" id="InputContraSenha">
+
+            </div>
           </div>
-          <button type="button" class="btn btn-outline-success" class="btn-spacing" id="BtnGerarContraSenha" ><b>Gerar Contra-Senha</b></button>
-          <script src="Funcs/ContraSenha.js"></script>
+          <button type="button" class="btn btn-outline-success" class="btn-spacing" id="BtnGerarContraSenha"><b>Gerar
+              Contra-Senha</b></button>
         </div>
       </div>
     </div>
@@ -60,6 +70,7 @@
   </section>
   <script src="js/bootstrap.min.js"></script>
   <script src="js/bootstrap.bundle.min.js"></script>
+  <script src="Funcs/ContraSenha.js"></script>
 
 </body>
 

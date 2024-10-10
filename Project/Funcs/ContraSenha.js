@@ -1,20 +1,19 @@
-var inputValue
-var durationTime
+var inputValue;
+var durationTime;
+var selectedUser;
 
 const usuarios = ['Todos', 'Usuário 1', 'Usuário 2', 'Usuário 3'];
 const duracoes = ['1 minuto', '5 minutos', '10 minutos'];
 
 function validarContraSenha(contraSenha) {
-    if (contraSenha == "") {
-        return false
-    } else {
-        return true
-    }
+    return contraSenha !== ""; // Verifica se a contra-senha não está vazia
 }
+
+
 function gerarDropdown(opcoes, dropdownId) {
     const dropdownMenu = document.querySelector(`#${dropdownId} + .dropdown-menu`);
     dropdownMenu.innerHTML = ''; // Limpa o conteúdo atual (caso haja algum)
-    
+
     opcoes.forEach(opcao => {
         const li = document.createElement('li');
         const a = document.createElement('a');
@@ -22,8 +21,8 @@ function gerarDropdown(opcoes, dropdownId) {
         a.href = '#';
         a.textContent = opcao;
         a.setAttribute('data-value', opcao);
-        
-        a.addEventListener('click', function(event) {
+
+        a.addEventListener('click', function (event) {
             event.preventDefault();
             document.getElementById(dropdownId).innerHTML = `<b>${opcao}</b>`;
             if (dropdownId === 'dropdownDuration') {
@@ -32,36 +31,43 @@ function gerarDropdown(opcoes, dropdownId) {
                 selectedUser = opcao;
             }
         });
-        
+
         li.appendChild(a);
         dropdownMenu.appendChild(li);
     });
 }
-
-
-
-// Atualiza o dropdown de duração da contra-senha
-document.querySelectorAll('#dropdownDuration + .dropdown-menu .dropdown-item').forEach(item => {
-    item.addEventListener('click', function(event) {
-        event.preventDefault();
-        let selectedText = this.getAttribute('data-value');
-        document.getElementById('dropdownDuration').innerHTML = `<b>${selectedText}</b>`;
-        durationTime = selectedText; // Salva a duração selecionada
-    });
-});
+function isDefined(){
+    if(durationTime == null){
+        return false;
+    }else{
+        return true;
+    }
+}
+function exibirAlerta(mensagem, tipo = 'danger') {
+    const alertContainer = document.getElementById('alertContainer');
+    alertContainer.innerHTML = `
+        <div class="alert alert-${tipo} alert-dismissible fade show text-center" role="alert">
+            ${mensagem}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    `;
+}
 
 document.getElementById('BtnGerarContraSenha').addEventListener('click', function () {
     var inputValue = document.getElementById('InputContraSenha').value;
-    console.log(inputValue);
-    var isValid = validarContraSenha(inputValue);
-    console.log(isValid);
-
-    if (isValid == true) {
-        alert('Contra-Senha Gerada: ' + inputValue + '\nTempo de duração: ' + durationTime);
-    }
-    else if(isValid == false) {
-        alert('Digite uma Contra-Senha');
+    var isValidContraSenha = validarContraSenha(inputValue);
+    
+    console.log(isDefined())
+    if (isValidContraSenha && isDefined()) 
+        {
+        exibirAlerta('Contra-Senha Gerada: ' + inputValue + '<br>Tempo de duração: ' + durationTime, 'success');
+    } else if(isValidContraSenha && !isDefined()) {
+        exibirAlerta('Defina um tempo de duração!', 'danger');
+    }else{
+        exibirAlerta('Digite uma Contra-Senha', 'danger');
     }
 });
+
+// Gerar opções de dropdown para usuários e duração
 gerarDropdown(usuarios, 'dropdownUser');
 gerarDropdown(duracoes, 'dropdownDuration');

@@ -73,6 +73,16 @@ function validaCNPJ(cnpj) {
     return true;
 }
 
+function exibirAlerta(mensagem, tipo) {
+    const alertContainer = document.getElementById('alertContainer');
+    alertContainer.innerHTML = `
+        <div class="alert alert-${tipo} alert-dismissible fade show" role="alert">
+            ${mensagem}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    `;
+}
+
 function CheckLengthToCPFOrCNPJ(value) {
     var cleanedValue = String(value).replace(/[^\d]/g, '');
 
@@ -86,15 +96,40 @@ function CheckLengthToCPFOrCNPJ(value) {
 }
 
 document.getElementById('BtnSearchCPF').addEventListener('click', function () {
-    var inputValue = document.getElementById('cpfCnpjInput').value;
-    var isValid = CheckLengthToCPFOrCNPJ(inputValue);
+    var cpfCnpjValue = document.getElementById('cpfCnpjInput').value;
+    var usernameValue = document.querySelector('input[placeholder="Usuario"]').value;
+    var passwordValue = document.querySelector('input[placeholder="Senha"]').value;
 
-    if (inputValue === '') {
-        alert('Informe um CPF ou CNPJ');
-    } else if (isValid) {
-        alert('Documento válido');
-        window.location.href = "menu.html";
-    } else {
-        alert('Documento inválido');
+    var isValidCPFOrCNPJ = CheckLengthToCPFOrCNPJ(cpfCnpjValue);
+
+    // Verifica se CPF ou CNPJ está vazio
+    if (cpfCnpjValue === '') {
+        exibirAlerta('Informe um CPF ou CNPJ', 'danger');
+        return;
     }
+
+    // Verifica se usuário está vazio
+    if (usernameValue === '') {
+        exibirAlerta('Informe o nome de usuário', 'danger');
+        return;
+    }
+
+    // Verifica se senha está vazia
+    if (passwordValue === '') {
+        exibirAlerta('Informe a senha', 'danger');
+        return;
+    }
+
+    // Valida CPF ou CNPJ
+    if (!isValidCPFOrCNPJ) {
+        exibirAlerta('CPF ou CNPJ inválido', 'danger');
+        return;
+    }
+
+    // Se tudo for válido, redireciona para a página de menu
+    exibirAlerta('Login bem-sucedido! Redirecionando...', 'success');
+    setTimeout(() => {
+        window.location.href = "menu.html";
+    }, 2000);
 });
+

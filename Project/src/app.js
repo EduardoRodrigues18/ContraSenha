@@ -10,13 +10,15 @@ app.use(express.json());
 app.get('/clientes', (req, res) => {
     connectToDatabase((err, db) => {
         if (err) {
-            return res.status(500).json({ error: 'Erro de conexão com o banco de dados' });
+            console.error('Erro na conexão com o banco de dados:', err);
+            return res.status(500).json({ error: 'Erro de conexão com o banco de dados', details: err.message });
         }
 
         db.query('SELECT * FROM CLIENTE', (err, result) => {
             if (err) {
+                console.error('Erro ao realizar consulta ao banco de dados:', err);
                 db.detach();
-                return res.status(500).json({ error: 'Erro na consulta' });
+                return res.status(500).json({ error: 'Erro na consulta', details: err.message });
             }
 
             res.json(result);
@@ -24,6 +26,7 @@ app.get('/clientes', (req, res) => {
         });
     });
 });
+
 
 // Rota para adicionar um novo cliente
 app.post('/clientes', (req, res) => {

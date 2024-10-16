@@ -2,7 +2,7 @@ const express = require('express');
 const connectToDatabase = require('./bd');
 const app = express();
 const port = 3000;
-const { getAllClients, insertClient } = require('./cliente.js');
+
 
 // Middleware para parsing do body
 app.use(express.json());
@@ -29,7 +29,7 @@ app.get('/clientes', (req, res) => {
 });
 
 
-// Rota para adicionar um novo cliente
+// ROTA PARA PROCURAR UM CLIENTE POR CPF
 app.post('/clientes', (req, res) => {
     const { nome, cpf } = req.body;
 
@@ -38,17 +38,25 @@ app.post('/clientes', (req, res) => {
             return res.status(500).json({ error: 'Erro de conexão com o banco de dados' });
         }
 
-        db.query('INSERT INTO CLIENTE (NOME, CPF) VALUES (?, ?)', [nome, cpf], (err, result) => {
+        db.query('SELECT ID, NOME, TRIM(CPF) AS CPF FROM CLIENTE WHERE CPF = ?', [cpf], (err, result) => {
             if (err) {
                 db.detach();
-                return res.status(500).json({ error: 'Erro ao inserir cliente' });
+                return res.status(500).json({ error: 'Erro ao encontrar cliente', details: err.message });
             }
 
-            res.json({ message: 'Cliente adicionado com sucesso!' });
+            if (result.length === 0) {
+                return res.status(404).json({ message: 'Cliente não encontrado!' });
+            }
+
+            res.json({
+                message: 'Cliente encontrado!',
+                cliente: result
+            });
             db.detach();
         });
     });
 });
+
 
 app.listen(port, () => {
     console.log(`Servidor rodando na porta ${port}`);

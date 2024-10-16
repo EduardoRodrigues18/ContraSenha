@@ -2,6 +2,7 @@ const express = require('express');
 const connectToDatabase = require('./bd');
 const app = express();
 const port = 3000;
+const { getAllClients, insertClient } = require('./cliente.js');
 
 // Middleware para parsing do body
 app.use(express.json());
@@ -14,7 +15,7 @@ app.get('/clientes', (req, res) => {
             return res.status(500).json({ error: 'Erro de conexão com o banco de dados', details: err.message });
         }
 
-        db.query('SELECT * FROM CLIENTE', (err, result) => {
+        db.query('SELECT ID, NOME, TRIM(CPF) AS CPF FROM CLIENTE;', (err, result) => {
             if (err) {
                 console.error('Erro ao realizar consulta ao banco de dados:', err);
                 db.detach();

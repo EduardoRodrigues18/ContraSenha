@@ -1,51 +1,65 @@
+const express = require('express');
 const connectToDatabase = require('./bd');
-const ApiError = require('../exceptions/ApiError');
-
+const app = express();
+const port = 3000;
 
 app.use(express.json());
 
-exports.getAllClients = async () => {
+// Função para buscar todos os clientes
+function GetClienteByCPF(req, res) {
+    const { cpf } = req.body;
+
     connectToDatabase((err, db) => {
         if (err) {
-            console.error('Erro na conexão com o banco de dados:', err);
-            return res.status(500).json({ error: 'Erro de conexão com o banco de dados', details: err.message });
+            return res.status(500).json({ error: 'Erro de conexão com o banco de dados' });
         }
 
-        db.query('SELECT ID, NOME, TRIM(CPF) AS CPF FROM CLIENTE;', (err, result) => {
+        db.query('SELECT ID, NOME, TRIM(CPF) AS CPF FROM CLIENTE WHERE CPF = ?', [cpf], (err, result) => {
             if (err) {
-                console.error('Erro ao realizar consulta ao banco de dados:', err);
                 db.detach();
-                return res.status(500).json({ error: 'Erro na consulta', details: err.message });
+                return res.status(500).json({ error: 'Erro ao encontrar cliente', details: err.message });
             }
 
-            res.json(result);
-            db.detach();  
+            if (result.length === 0) {
+                return res.status(404).json({ message: 'Cliente não encontrado!' });
+            }
+
+            res.json({
+                message: 'Cliente encontrado!',
+                cliente: result
+            });
+            db.detach();
         });
     });
 }
 
+function GetClientes(req, res) {
+    connectToDatabase((err, db) => {
+        if (err) {
+            return res.status(500).json({ error: 'Erro de conexão com o banco de dados' });
+        }
 
-exports.insertClient = async (nome, cpf) => {
-        const { nome, cpf } = req.body;
-
-        connectToDatabase((err, db) => {
+        db.query('SELECT ID, NOME, TRIM(CPF) AS CPF FROM CLIENTE', (err, result) => {
             if (err) {
-                return res.status(500).json({ error: 'Erro de conexão com o banco de dados' });
+                db.detach();
+                return res.status(500).json({ error: 'Erro ao buscar clientes', details: err.message });
             }
 
-            db.query('INSERT INTO CLIENTE (NOME, CPF) VALUES (?, ?)', [nome, cpf], (err, result) => {
-                if (err) {
-                    db.detach();
-                    return res.status(500).json({ error: 'Erro ao inserir cliente' });
-                }
+            if (result.length === 0) {
+                return res.status(404).json({ message: 'Nenhum cliente encontrado!' });
+            }
 
-                res.json({ message: 'Cliente adicionado com sucesso!' });
-                db.detach();
+            res.json({
+                message: 'Clientes encontrados!',
+                clientes: result
             });
+            db.detach();
         });
+    });
 }
 
-
-app.listen(port, () => {
-    console.log(`Servidor rodando na porta ${port}`);
-});
+// Exporta ambas as funções
+module.exports = {
+    GetClienteByCPF,
+    GetClientes
+};

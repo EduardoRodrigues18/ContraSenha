@@ -1,0 +1,91 @@
+html,
+body {
+    height: 100%;
+    font-size: 1rem;
+}
+
+.gradient {
+
+    background: rgb(178, 252, 159);
+    background: linear-gradient(90deg, rgba(178, 252, 159, 1) 0%, rgba(70, 210, 72, 1) 35%, rgba(3, 163, 29, 1) 100%);
+}
+
+.page-header {
+    margin-top: 0rem;
+    font-size: 1.25rem;
+    color: #ffffff;
+}
+
+.btn-outline-success {
+    margin-bottom: 30px;
+}
+
+.btn-spacing {
+    margin-top: 30px;
+}
+
+.progress {
+    margin-bottom: 20px;
+
+}
+
+.flex-nowrap {
+    margin-top: 20px;
+
+}
+
+.dropdown-toggle {
+    margin-top: 20px;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.container {
+    margin-top: 20px;
+}
+
+.borda {
+
+    margin-bottom: 0px;
+    padding-left: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+
+
+}
+
+.e-card {
+    /* margin: 10% auto;*/
+    backdrop-filter: blur(20px);
+    background-image: linear-gradient(to left,rgb(110, 253, 74), rgba(3, 163, 29, 1));
+    box-shadow: 0px 8px 28px -9px rgba(0, 0, 0, 0.45);
+    position: relative;
+    width: 400px;
+    height: 500px;
+    border-radius: 16px;
+    overflow: hidden;
+    padding: 4%;
+}
+
+#test {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+
+#logo
+{
+    justify-content: center;
+}
+
+.custom-button {
+    background-color: #ffffff; /* Cor de fundo personalizada */
+    color: rgb(22, 130, 0); /* Cor do texto */
+    border: rgb(14, 83, 0);
+    border-radius: 5px;
+    
+}

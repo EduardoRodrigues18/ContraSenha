@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menu</title>
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/styles.css">
+
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container" id="logo">
+      <a class="navbar-brand" href="#"><img src="img/memoria.webp" width="70" height="70" , alt=""></a>
+    </div>
+  </nav>
+  <header>
+    <div class="container">
+      <div id="test">
+        <div class="col-md-6 e-card">
+          <h1 class="display-6" style="color: white;"><b>Gerador de Contra-Senha</b></h1>
+          <div>
+            <div class="dropdown">
+              <a id="dropdownUser" class="btn btn-secondary dropdown-toggle" href="#" role="button"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                <b>Usuário</b>
+              </a>
+              <ul class="dropdown-menu">
+                <!-- Os itens serão gerados dinamicamente aqui -->
+              </ul>
+            </div>
+
+            <div class="dropdown">
+              <a id="dropdownDuration" class="btn btn-secondary dropdown-toggle" href="#" role="button"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                <b>Duração da Contra-Senha</b>
+              </a>
+              <ul class="dropdown-menu">
+                <!-- Os itens serão gerados dinamicamente aqui -->
+              </ul>
+            </div>
+            <div class="input-group flex-nowrap">
+              <input type="text" class="form-control" placeholder="Contra-Senha" aria-label="Username"
+                aria-describedby="addon-wrapping" id="InputContraSenha">
+            </div>
+            <div id="alertContainer" class="alert text-center borda"></div>
+          </div>
+          <div id="test">
+            <button type="button" class="btn btn-success custom-button" class="btn-spacing" id="BtnGerarContraSenha">Gerar
+                Contra-Senha</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </header>
+  <section class="companies">
+    <div class="container text-center">
+    </div>
+  </section>
+  <section class="feature gradient">
+
+    <div class="container">
+      <div class="row">
+
+      </div>
+    </div>
+  </section>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/bootstrap.bundle.min.js"></script>
+  <script src="Funcs/ContraSenha.js"></script>
+
+</body>
+
+</html>

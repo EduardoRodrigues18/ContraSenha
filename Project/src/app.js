@@ -3,12 +3,10 @@ const connectToDatabase = require('./bd');
 const app = express();
 const port = 3000;
 
-
-// Middleware para parsing do body
 app.use(express.json());
 
-// Rota para buscar todos os clientes
-app.get('/clientes', (req, res) => {
+// Função para buscar todos os clientes
+function GetClientes(req, res) {
     connectToDatabase((err, db) => {
         if (err) {
             console.error('Erro na conexão com o banco de dados:', err);
@@ -26,12 +24,14 @@ app.get('/clientes', (req, res) => {
             db.detach();  // Encerra a conexão após a consulta
         });
     });
-});
+}
 
+// Configuração da rota para buscar clientes
+app.get('/clientes', GetClientes);
 
-// ROTA PARA PROCURAR UM CLIENTE POR CPF
+// Rota para procurar um cliente por CPF
 app.post('/clientes', (req, res) => {
-    const { nome, cpf } = req.body;
+    const { cpf } = req.body;
 
     connectToDatabase((err, db) => {
         if (err) {
@@ -57,7 +57,9 @@ app.post('/clientes', (req, res) => {
     });
 });
 
-
 app.listen(port, () => {
     console.log(`Servidor rodando na porta ${port}`);
 });
+
+// Exporta a função GetClientes se necessário
+module.exports = { GetClientes };

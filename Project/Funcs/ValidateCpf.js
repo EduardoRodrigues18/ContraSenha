@@ -1,3 +1,4 @@
+var haveClient = false;
 function validaCPF(cpf) {
     var Soma = 0;
     var Resto;
@@ -82,6 +83,20 @@ function exibirAlerta(mensagem, tipo) {
         </div>
     `;
 }
+function fetchClientes() {
+    fetch('/clientes')  // Faz uma requisição GET ao backend
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);  // Aqui você pode processar os dados recebidos
+            exibirAlerta('Clientes encontrados!', 'success');
+            haveClient = true;
+        })
+        .catch(error => {
+            console.error('Erro ao buscar clientes:', error);
+            exibirAlerta('Erro ao buscar clientes!', 'danger');
+            haveClient = false;
+        });
+}
 
 function CheckLengthToCPFOrCNPJ(value) {
     var cleanedValue = String(value).replace(/[^\d]/g, '');
@@ -101,6 +116,7 @@ document.getElementById('BtnSearchCPF').addEventListener('click', function () {
     var passwordValue = document.querySelector('input[placeholder="Senha"]').value;
 
     var isValidCPFOrCNPJ = CheckLengthToCPFOrCNPJ(cpfCnpjValue);
+    fetchClientes();
 
     // Verifica se CPF ou CNPJ está vazio
     if (cpfCnpjValue === '') {
@@ -127,9 +143,12 @@ document.getElementById('BtnSearchCPF').addEventListener('click', function () {
     }
 
     // Se tudo for válido, redireciona para a página de menu
-    exibirAlerta('Login bem-sucedido! Redirecionando...', 'success');
-    setTimeout(() => {
-        window.location.href = "menu.html";
-    }, 2000);
+    if(haveClient == true){
+        exibirAlerta('Login bem-sucedido! Redirecionando...', 'success');
+        setTimeout(() => {
+            window.location.href = "menu.html";
+        }, 2000);
+    }
+
 });
 

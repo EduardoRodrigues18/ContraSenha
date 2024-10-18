@@ -4,7 +4,6 @@ const ApiError = require('../exceptions/ApiError');
 
 app.use(express.json());
 
-// Rota para buscar todos os clientes
 exports.getAllClients = async () => {
     connectToDatabase((err, db) => {
         if (err) {
@@ -20,7 +19,7 @@ exports.getAllClients = async () => {
             }
 
             res.json(result);
-            db.detach();  // Encerra a conexão após a consulta
+            db.detach();  
         });
     });
 }

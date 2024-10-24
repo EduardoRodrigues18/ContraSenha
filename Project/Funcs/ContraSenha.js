@@ -4,9 +4,41 @@ var selectedUser;
 
 const usuarios = ['Todos', 'Usuário 1', 'Usuário 2', 'Usuário 3'];
 const duracoes = ['1 minuto', '5 minutos', '10 minutos'];
+const opcoes = [
+    "TODOS",
+    "ABERTURA DO PERIODO",
+    "ABRECAIXA",
+    "ALCADASLIBERACAO",
+    "CANCELAITEM",
+    "CANCELATELE",
+    "CANCELAVR",
+    "CHECKOUT",
+    "CONFCEGAENTRADA",
+    "CONFCEGASAIDA",
+    "CONTASEMATRASO",
+    "DESCONTO",
+    "ENCERRARCONTRATO",
+    "ESTOQUEINSUFICIENTE",
+    "FECHACAIXA",
+    "FECHAMENTO DO PERIODO",
+    "IMPRIMIRPELOCUSTO",
+    "LIMITEDECREDITO",
+    "SANGRIACAIXA",
+    "SEMCOMPRANOPERIODO",
+    "SEPARAPORLOCALESTOQUE",
+    "TRANSFERENCIACAIXA",
+    "TROCO",
+    "VALIDARCP"
+  ];
+  
 
 function validarContraSenha(contraSenha) {
     return contraSenha !== ""; // Verifica se a contra-senha não está vazia
+}
+
+function randomContraSenha()
+{
+    return Math.floor(Math.random() * (1000, 9999))
 }
 
 
@@ -61,13 +93,14 @@ document.getElementById('BtnGerarContraSenha').addEventListener('click', functio
     if (isValidContraSenha && isDefined()) 
         {
         exibirAlerta('Contra-Senha Gerada: ' + inputValue + '<br>Tempo de duração: ' + durationTime, 'success');
-    } else if(isValidContraSenha && !isDefined()) {
+    } else if(!isDefined()) {
         exibirAlerta('Defina um tempo de duração!', 'danger');
     }else{
-        exibirAlerta('Digite uma Contra-Senha', 'danger');
+        exibirAlerta('Contra-Senha Gerada: ' + randomContraSenha() + '<br>Tempo de duração: ' + durationTime, 'success');
     }
 });
 
 // Gerar opções de dropdown para usuários e duração
 gerarDropdown(usuarios, 'dropdownUser');
 gerarDropdown(duracoes, 'dropdownDuration');
+gerarDropdown(opcoes, 'dropdownLiberacao')

@@ -89,3 +89,7 @@ body {
     border-radius: 5px;
     
 }
+.dropdown-scroll {
+    max-height: 200px; /* Altura máxima para o menu */
+    overflow-y: auto;  /* Scroll vertical quando exceder o tamanho */
+  }

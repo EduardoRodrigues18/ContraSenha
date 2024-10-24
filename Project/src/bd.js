@@ -3,7 +3,7 @@ const Firebird = require('node-firebird');
 const options = {
     host: 'localhost',
     port: 3050,        
-    database: 'C:/BD/DADOS.FDB', 
+    database: 'C:/Memoria/SisComInd/Dados/XISPONTOCOM.FDB', 
     user: 'SYSDBA',
     password: 'masterkey',
     lowercase_keys: false, 

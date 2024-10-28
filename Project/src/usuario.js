@@ -4,6 +4,8 @@ const app = express();
 const port = 3000;
 
 let usuario = null;
+let usuarios = null;
+
 app.use(express.json());
 
 function setUsuario(valor) {
@@ -13,6 +15,13 @@ function setUsuario(valor) {
 function getUsuario() {
     return usuario;
 }
+function setUsuarios(valor) {
+    usuarios = valor;
+}
+
+function getUsuarios() {
+    return usuarios;
+}
 
 // Função para buscar todos os clientes
 function GetUsuarios(req, res) {
@@ -21,7 +30,7 @@ function GetUsuarios(req, res) {
             return res.status(500).json({ error: 'Erro de conexão com o banco de dados' });
         }
 
-        db.query('SELECT * FROM TAB_USUARIO', (err, result) => {
+        db.query('SELECT USR_LOGIN FROM TAB_USUARIO', (err, result) => {
             if (err) {
                 db.detach();
                 return res.status(500).json({ error: 'Erro ao buscar clientes', details: err.message });
@@ -30,7 +39,8 @@ function GetUsuarios(req, res) {
             if (result.length === 0) {
                 return res.status(404).json({ message: 'Nenhum cliente encontrado!' });
             }
-
+            setUsuarios(result)
+            console.log(usuarios)
             res.json({
                 message: 'Clientes encontrados!',
                 clientes: result
@@ -47,7 +57,7 @@ function GetUsuarioByName(req, res) {
             return res.status(500).json({ error: 'Erro de conexão com o banco de dados' });
         }
 
-        db.query('SELECT * FROM TAB_USUARIO WHERE USR_LOGIN = ?', [USR_NOME], (err, result) => {
+        db.query('SELECT USR_CODIGO FROM TAB_USUARIO WHERE USR_LOGIN = ?', [USR_NOME], (err, result) => {
             if (err) {
                 db.detach(); // Libera a conexão com o banco de dados
                 return res.status(500).json({ error: 'Erro ao encontrar usuário', details: err.message });

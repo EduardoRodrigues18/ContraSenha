@@ -84,6 +84,44 @@ function exibirAlerta(mensagem, tipo = 'danger') {
         </div>
     `;
 }
+// Função para buscar os usuários
+async function buscarUsuarios() {
+    try {
+      // Faz a requisição à API que retorna os usuários
+      const response = await fetch('http://localhost:3000/usuarios');
+      const data = await response.json();
+  
+      // Verifica se a resposta contém os clientes
+      if (data.clientes && data.clientes.length > 0) {
+        popularDropdown('dropdownUserMenu', data.clientes);
+      } else {
+        console.log('Nenhum cliente encontrado.');
+      }
+    } catch (error) {
+      console.error('Erro ao buscar os usuários:', error);
+    }
+  }
+  
+  // Função para popular o dropdown
+  function popularDropdown(dropdownId, items) {
+    const dropdownMenu = document.getElementById(dropdownId);
+    dropdownMenu.innerHTML = '';  // Limpa o menu atual (caso já tenha itens)
+  
+    items.forEach(item => {
+      const listItem = document.createElement('li');
+      const linkItem = document.createElement('a');
+      linkItem.classList.add('dropdown-item');
+      linkItem.href = "#";
+      linkItem.textContent = item.USR_LOGIN;  // Usar o login do cliente
+      listItem.appendChild(linkItem);
+      dropdownMenu.appendChild(listItem);
+    });
+  }
+  
+  // Chama a função de buscar os usuários ao carregar a página
+  document.addEventListener('DOMContentLoaded', buscarUsuarios);
+  
+  
 
 document.getElementById('BtnGerarContraSenha').addEventListener('click', function () {
     var inputValue = document.getElementById('InputContraSenha').value;
@@ -101,6 +139,5 @@ document.getElementById('BtnGerarContraSenha').addEventListener('click', functio
 });
 
 // Gerar opções de dropdown para usuários e duração
-gerarDropdown(usuarios, 'dropdownUser');
 gerarDropdown(duracoes, 'dropdownDuration');
 gerarDropdown(opcoes, 'dropdownLiberacao')

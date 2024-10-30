@@ -1,143 +1,90 @@
-var inputValue;
-var durationTime;
-var selectedUser;
+let durationTime;
+let selectedUser;
 
-const usuarios = ['Todos', 'Usuário 1', 'Usuário 2', 'Usuário 3'];
 const duracoes = ['1 minuto', '5 minutos', '10 minutos'];
-const opcoes = [
-    "TODOS",
-    "ABERTURA DO PERIODO",
-    "ABRECAIXA",
-    "ALCADASLIBERACAO",
-    "CANCELAITEM",
-    "CANCELATELE",
-    "CANCELAVR",
-    "CHECKOUT",
-    "CONFCEGAENTRADA",
-    "CONFCEGASAIDA",
-    "CONTASEMATRASO",
-    "DESCONTO",
-    "ENCERRARCONTRATO",
-    "ESTOQUEINSUFICIENTE",
-    "FECHACAIXA",
-    "FECHAMENTO DO PERIODO",
-    "IMPRIMIRPELOCUSTO",
-    "LIMITEDECREDITO",
-    "SANGRIACAIXA",
-    "SEMCOMPRANOPERIODO",
-    "SEPARAPORLOCALESTOQUE",
-    "TRANSFERENCIACAIXA",
-    "TROCO",
-    "VALIDARCP"
-  ];
-  
+const opcoesLiberacao = [
+    "TODOS", "ABERTURA DO PERIODO", "ABRECAIXA", "ALCADASLIBERACAO", "CANCELAITEM", 
+    "CANCELATELE", "CANCELAVR", "CHECKOUT", "CONFCEGAENTRADA", "CONFCEGASAIDA",
+    "CONTASEMATRASO", "DESCONTO", "ENCERRARCONTRATO", "ESTOQUEINSUFICIENTE",
+    "FECHACAIXA", "FECHAMENTO DO PERIODO", "IMPRIMIRPELOCUSTO", "LIMITEDECREDITO", 
+    "SANGRIACAIXA", "SEMCOMPRANOPERIODO", "SEPARAPORLOCALESTOQUE", 
+    "TRANSFERENCIACAIXA", "TROCO", "VALIDARCP"
+];
 
 function validarContraSenha(contraSenha) {
-    return contraSenha !== ""; // Verifica se a contra-senha não está vazia
+    return contraSenha !== "";
 }
 
-function randomContraSenha()
-{
-    return Math.floor(Math.random() * (1000, 9999))
+function randomContraSenha() {
+    return Math.floor(Math.random() * 9000 + 1000);
 }
 
-
-function gerarDropdown(opcoes, dropdownId) {
-    const dropdownMenu = document.querySelector(`#${dropdownId} + .dropdown-menu`);
-    dropdownMenu.innerHTML = ''; // Limpa o conteúdo atual (caso haja algum)
-
-    opcoes.forEach(opcao => {
-        const li = document.createElement('li');
-        const a = document.createElement('a');
-        a.classList.add('dropdown-item');
-        a.href = '#';
-        a.textContent = opcao;
-        a.setAttribute('data-value', opcao);
-
-        a.addEventListener('click', function (event) {
-            event.preventDefault();
-            document.getElementById(dropdownId).innerHTML = `<b>${opcao}</b>`;
-            if (dropdownId === 'dropdownDuration') {
-                durationTime = opcao;
-            } else if (dropdownId === 'dropdownUser') {
-                selectedUser = opcao;
-            }
-        });
-
-        li.appendChild(a);
-        dropdownMenu.appendChild(li);
-    });
-}
-function isDefined(){
-    if(durationTime == null){
-        return false;
-    }else{
-        return true;
-    }
-}
 function exibirAlerta(mensagem, tipo = 'danger') {
-    const alertContainer = document.getElementById('alertContainer');
-    alertContainer.innerHTML = `
+    document.getElementById('alertContainer').innerHTML = `
         <div class="alert alert-${tipo} alert-dismissible fade show text-center" role="alert">
             ${mensagem}
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     `;
 }
-// Função para buscar os usuários
+
 async function buscarUsuarios() {
     try {
-      // Faz a requisição à API que retorna os usuários
-      const response = await fetch('http://localhost:3000/usuarios');
-      const data = await response.json();
-  
-      // Verifica se a resposta contém os clientes
-      if (data.clientes && data.clientes.length > 0) {
-        popularDropdown('dropdownUserMenu', data.clientes);
-      } else {
-        console.log('Nenhum cliente encontrado.');
-      }
-    } catch (error) {
-      console.error('Erro ao buscar os usuários:', error);
-    }
-  }
-  
-  // Função para popular o dropdown
-  function popularDropdown(dropdownId, items) {
-    const dropdownMenu = document.getElementById(dropdownId);
-    dropdownMenu.innerHTML = '';  // Limpa o menu atual (caso já tenha itens)
-  
-    items.forEach(item => {
-      const listItem = document.createElement('li');
-      const linkItem = document.createElement('a');
-      linkItem.classList.add('dropdown-item');
-      linkItem.href = "#";
-      linkItem.textContent = item.USR_LOGIN;  // Usar o login do cliente
-      listItem.appendChild(linkItem);
-      dropdownMenu.appendChild(listItem);
-    });
-  }
-  
-  // Chama a função de buscar os usuários ao carregar a página
-  document.addEventListener('DOMContentLoaded', buscarUsuarios);
-  
-  
+        const response = await fetch('http://localhost:3000/usuarios');
+        const data = await response.json();
 
-document.getElementById('BtnGerarContraSenha').addEventListener('click', function () {
-    var inputValue = document.getElementById('InputContraSenha').value;
-    var isValidContraSenha = validarContraSenha(inputValue);
-    
-    console.log(isDefined())
-    if (isValidContraSenha && isDefined()) 
-        {
-        exibirAlerta('Contra-Senha Gerada: ' + inputValue + '<br>Tempo de duração: ' + durationTime, 'success');
-    } else if(!isDefined()) {
-        exibirAlerta('Defina um tempo de duração!', 'danger');
-    }else{
-        exibirAlerta('Contra-Senha Gerada: ' + randomContraSenha() + '<br>Tempo de duração: ' + durationTime, 'success');
+        if (data.clientes && data.clientes.length > 0) {
+            data.clientes.unshift({ USR_LOGIN: 'TODOS' });
+            popularDropdown(data.clientes, 'dropdownUser', 'USR_LOGIN');
+        } else {
+            console.log('Nenhum cliente encontrado.');
+        }
+    } catch (error) {
+        console.error('Erro ao buscar os usuários:', error);
     }
+}
+
+function popularDropdown(items, dropdownId, valueKey = null) {
+    const dropdownMenu = document.querySelector(`#${dropdownId} + .dropdown-menu`);
+    dropdownMenu.innerHTML = '';
+
+    items.forEach(item => {
+        const li = document.createElement('li');
+        const linkItem = document.createElement('a');
+        linkItem.classList.add('dropdown-item');
+        linkItem.href = "#";
+        linkItem.textContent = valueKey ? item[valueKey] : item; // Usar valueKey para objetos e item direto para strings
+
+        linkItem.addEventListener('click', function (event) {
+            event.preventDefault();
+            document.getElementById(dropdownId).innerHTML = `<b>${linkItem.textContent}</b>`;
+            if (dropdownId === 'dropdownUser') {
+                selectedUser = linkItem.textContent;
+            } else if (dropdownId === 'dropdownDuration') {
+                durationTime = linkItem.textContent;
+            }
+        });
+
+        li.appendChild(linkItem);
+        dropdownMenu.appendChild(li);
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    buscarUsuarios();
+    popularDropdown(duracoes, 'dropdownDuration');        // Sem `valueKey` para arrays de strings
+    popularDropdown(opcoesLiberacao, 'dropdownLiberacao'); // Sem `valueKey` para arrays de strings
 });
 
-// Gerar opções de dropdown para usuários e duração
-gerarDropdown(duracoes, 'dropdownDuration');
-gerarDropdown(opcoes, 'dropdownLiberacao')
+document.getElementById('BtnGerarContraSenha').addEventListener('click', function () {
+    const inputValue = document.getElementById('InputContraSenha').value;
+    const isValidContraSenha = validarContraSenha(inputValue);
+
+    if (!durationTime) {
+        exibirAlerta('Defina um tempo de duração!', 'danger');
+    } else if (isValidContraSenha) {
+        exibirAlerta(`Contra-Senha Gerada: ${inputValue}<br>Tempo de duração: ${durationTime}`, 'success');
+    } else {
+        exibirAlerta(`Contra-Senha Gerada: ${randomContraSenha()}<br>Tempo de duração: ${durationTime}`, 'success');
+    }
+});

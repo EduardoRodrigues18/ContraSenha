@@ -1,7 +1,7 @@
 let durationTime;
 let selectedUser;
 
-const duracoes = ['1 minuto', '5 minutos', '10 minutos'];
+const duracoes = [1, , '10 minutos'];
 const opcoesLiberacao = [
     "TODOS", "ABERTURA DO PERIODO", "ABRECAIXA", "ALCADASLIBERACAO", "CANCELAITEM", 
     "CANCELATELE", "CANCELAVR", "CHECKOUT", "CONFCEGAENTRADA", "CONFCEGASAIDA",
@@ -69,14 +69,42 @@ function popularDropdown(items, dropdownId, valueKey = null) {
         dropdownMenu.appendChild(li);
     });
 }
+async function gerarContraSenha(usuario, duracao, contraSenha) {
+    try {
+        const response = await fetch('http://localhost:3000/gerar-contrasenha', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                CSH_CODIGO: 1,
+                CSH_CONTRASENHA: contraSenha,
+                CSH_DTHR_VALIDADE: duracao,
+                USR_UTILIZOU: usuario 
+            })
+        });
+
+        if (response.ok) {
+            const data = await response.text(); // Obtém a resposta como texto
+        } else {
+            const errorText = await response.text();
+            exibirAlerta(errorText || 'Erro ao gerar contra-senha', 'danger');
+        }
+    } catch (error) {
+        console.error('Erro na requisição:', error);
+        exibirAlerta('Erro ao tentar gerar contra-senha!', 'danger');
+    }
+}
+
 
 document.addEventListener('DOMContentLoaded', () => {
     buscarUsuarios();
-    popularDropdown(duracoes, 'dropdownDuration');        // Sem `valueKey` para arrays de strings
-    popularDropdown(opcoesLiberacao, 'dropdownLiberacao'); // Sem `valueKey` para arrays de strings
+    popularDropdown(duracoes, 'dropdownDuration');        
+    popularDropdown(opcoesLiberacao, 'dropdownLiberacao'); 
+    
 });
 
-document.getElementById('BtnGerarContraSenha').addEventListener('click', function () {
+document.getElementById('BtnGerarContraSenha').addEventListener('click',async function () {
     const inputValue = document.getElementById('InputContraSenha').value;
     const isValidContraSenha = validarContraSenha(inputValue);
 
@@ -84,7 +112,11 @@ document.getElementById('BtnGerarContraSenha').addEventListener('click', functio
         exibirAlerta('Defina um tempo de duração!', 'danger');
     } else if (isValidContraSenha) {
         exibirAlerta(`Contra-Senha Gerada: ${inputValue}<br>Tempo de duração: ${durationTime}`, 'success');
+        gerarContraSenha(1, durationTime, inputValue);
     } else {
-        exibirAlerta(`Contra-Senha Gerada: ${randomContraSenha()}<br>Tempo de duração: ${durationTime}`, 'success');
+        let contraSenha = randomContraSenha()
+        exibirAlerta(`Contra-Senha Gerada: ${contraSenha}<br>Tempo de duração: ${durationTime}`, 'success');
+        gerarContraSenha(1, 1, contraSenha);
+
     }
 });

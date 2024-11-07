@@ -1,7 +1,14 @@
 let durationTime;
 let selectedUser;
 
-const duracoes = [1, , '10 minutos'];
+const duracoes = [
+    { label: "1 minuto", value: 1 },
+    { label: "5 minutos", value: 5 },
+    { label: "10 minutos", value: 10 }
+];
+
+const usuarios = null;
+
 const opcoesLiberacao = [
     "TODOS", "ABERTURA DO PERIODO", "ABRECAIXA", "ALCADASLIBERACAO", "CANCELAITEM", 
     "CANCELATELE", "CANCELAVR", "CHECKOUT", "CONFCEGAENTRADA", "CONFCEGASAIDA",
@@ -34,8 +41,14 @@ async function buscarUsuarios() {
         const data = await response.json();
 
         if (data.clientes && data.clientes.length > 0) {
-            data.clientes.unshift({ USR_LOGIN: 'TODOS' });
-            popularDropdown(data.clientes, 'dropdownUser', 'USR_LOGIN');
+            
+            const usuarios = data.clientes.map(cliente => ({
+                label: cliente.USR_LOGIN,
+                value: cliente.USR_CODIGO
+            }));
+            usuarios.unshift({ label: 'TODOS', value: null }); 
+
+            popularDropdown(usuarios, 'dropdownUser');
         } else {
             console.log('Nenhum cliente encontrado.');
         }
@@ -53,15 +66,23 @@ function popularDropdown(items, dropdownId, valueKey = null) {
         const linkItem = document.createElement('a');
         linkItem.classList.add('dropdown-item');
         linkItem.href = "#";
-        linkItem.textContent = valueKey ? item[valueKey] : item; // Usar valueKey para objetos e item direto para strings
+
+        if (typeof item === 'object' && item !== null) {
+            linkItem.textContent = item.label || item[valueKey]; 
+        } else {
+            linkItem.textContent = item; 
+        }
 
         linkItem.addEventListener('click', function (event) {
             event.preventDefault();
             document.getElementById(dropdownId).innerHTML = `<b>${linkItem.textContent}</b>`;
+
             if (dropdownId === 'dropdownUser') {
-                selectedUser = linkItem.textContent;
+                selectedUser = item.value; // Aqui captura o ID do usuário
             } else if (dropdownId === 'dropdownDuration') {
-                durationTime = linkItem.textContent;
+                durationTime = item.value !== undefined ? item.value : item; 
+            } else if (dropdownId === 'dropdownLiberacao') {
+                selectedLiberacao = item;
             }
         });
 
@@ -69,6 +90,9 @@ function popularDropdown(items, dropdownId, valueKey = null) {
         dropdownMenu.appendChild(li);
     });
 }
+
+
+
 async function gerarContraSenha(usuario, duracao, contraSenha) {
     try {
         const response = await fetch('http://localhost:3000/gerar-contrasenha', {
@@ -85,7 +109,7 @@ async function gerarContraSenha(usuario, duracao, contraSenha) {
         });
 
         if (response.ok) {
-            const data = await response.text(); // Obtém a resposta como texto
+            const data = await response.text(); 
         } else {
             const errorText = await response.text();
             exibirAlerta(errorText || 'Erro ao gerar contra-senha', 'danger');
@@ -112,11 +136,10 @@ document.getElementById('BtnGerarContraSenha').addEventListener('click',async fu
         exibirAlerta('Defina um tempo de duração!', 'danger');
     } else if (isValidContraSenha) {
         exibirAlerta(`Contra-Senha Gerada: ${inputValue}<br>Tempo de duração: ${durationTime}`, 'success');
-        gerarContraSenha(1, durationTime, inputValue);
+        gerarContraSenha(selectedUser, durationTime, inputValue);
     } else {
         let contraSenha = randomContraSenha()
-        exibirAlerta(`Contra-Senha Gerada: ${contraSenha}<br>Tempo de duração: ${durationTime}`, 'success');
-        gerarContraSenha(1, 1, contraSenha);
-
+        exibirAlerta(`Contra-Senha Gerada: ${contraSenha}<br>Tempo de duração: ${durationTime} minuto(s)`, 'success');
+        gerarContraSenha(selectedUser, durationTime, contraSenha);
     }
 });

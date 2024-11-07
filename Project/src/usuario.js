@@ -30,7 +30,7 @@ function GetUsuarios(req, res) {
             return res.status(500).json({ error: 'Erro de conexão com o banco de dados' });
         }
 
-        db.query('SELECT USR_LOGIN FROM TAB_USUARIO', (err, result) => {
+        db.query('SELECT USR_CODIGO, USR_LOGIN FROM TAB_USUARIO', (err, result) => {
             if (err) {
                 db.detach();
                 return res.status(500).json({ error: 'Erro ao buscar clientes', details: err.message });
@@ -49,6 +49,8 @@ function GetUsuarios(req, res) {
         });
     });
 }
+
+
 function GetUsuarioByName(req, res) {
     const { USR_NOME } = req.body;
 

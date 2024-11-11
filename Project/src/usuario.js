@@ -51,26 +51,26 @@ function GetUsuarios(req, res) {
 }
 
 
-function GetUsuarioByName(req, res) {
-    const { USR_NOME } = req.body;
+function GetUsuario(req, res) {
+    const { USR_LOGIN, USR_SENHA } = req.body;
 
     connectToDatabase((err, db) => {
         if (err) {
             return res.status(500).json({ error: 'Erro de conexão com o banco de dados' });
         }
 
-        db.query('SELECT USR_CODIGO FROM TAB_USUARIO WHERE USR_LOGIN = ?', [USR_NOME], (err, result) => {
+        db.query('SELECT USR_CODIGO FROM TAB_USUARIO WHERE USR_LOGIN = ? AND USR_SENHA = ?', [USR_LOGIN, USR_SENHA], (err, result) => {
             if (err) {
-                db.detach(); // Libera a conexão com o banco de dados
+                db.detach();
                 return res.status(500).json({ error: 'Erro ao encontrar usuário', details: err.message });
             }
 
             if (result.length === 0) {
-                db.detach(); // Libera a conexão com o banco de dados
-                return res.status(404).json({ message: 'Usuário não encontrado!' });
+                db.detach(); 
+                return res.status(404).json({ message: 'Usuário ou senha incorretos' });
             }
 
-            setUsuario(result[0])
+            const usuario = result[0];
             console.log('Usuário encontrado:', usuario);
 
             res.json({
@@ -78,17 +78,18 @@ function GetUsuarioByName(req, res) {
                 cliente: usuario 
             });
 
-            db.detach();
+            db.detach(); 
         });
     });
 }
 
 
 
+
 // Exporta ambas as funções
 module.exports = {
     GetUsuarios,
-    GetUsuarioByName,
+    GetUsuario,
     setUsuario,
     getUsuario
 };

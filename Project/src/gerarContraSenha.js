@@ -5,9 +5,8 @@ const app = express();
 const port = 3000;
 
 function GerarContraSenha(req, res) {
-    const { CSH_CODIGO, CSH_CONTRASENHA, CSH_DTHR_VALIDADE, USR_UTILIZOU } = req.body;
+    const { CSH_CODIGO, USR_CRIOU, CSH_CONTRASENHA, CSH_DTHR_VALIDADE, USR_UTILIZOU } = req.body;
 
-    // Verifica se CSH_CODIGO está presente e não é nulo ou vazio
     if (!CSH_CODIGO) {
         return res.status(400).send('Erro: CSH_CODIGO é obrigatório e não pode ser nulo');
     }
@@ -20,12 +19,12 @@ function GerarContraSenha(req, res) {
 
         const query = `
             UPDATE OR INSERT INTO TAB_CONTRASENHA
-            (CSH_CODIGO, CSH_CONTRASENHA, CSH_DTHR_VALIDADE, USR_UTILIZOU)
-            VALUES (?, ?, DATEADD(? MINUTE TO CURRENT_TIMESTAMP), ?)
+            (CSH_CODIGO, USR_CRIOU, CSH_CONTRASENHA, CSH_DTHR_VALIDADE, USR_UTILIZOU)
+            VALUES (?, ?, ?, DATEADD(? MINUTE TO CURRENT_TIMESTAMP), ?)
             MATCHING (CSH_CODIGO)
         `;
 
-        const params = [CSH_CODIGO, CSH_CONTRASENHA, CSH_DTHR_VALIDADE, USR_UTILIZOU];
+        const params = [CSH_CODIGO, USR_CRIOU, CSH_CONTRASENHA, CSH_DTHR_VALIDADE, USR_UTILIZOU];
 
         db.query(query, params, (err, result) => {
             db.detach();

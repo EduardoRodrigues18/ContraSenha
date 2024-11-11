@@ -78,7 +78,7 @@ function popularDropdown(items, dropdownId, valueKey = null) {
             document.getElementById(dropdownId).innerHTML = `<b>${linkItem.textContent}</b>`;
 
             if (dropdownId === 'dropdownUser') {
-                selectedUser = item.value; // Aqui captura o ID do usuário
+                selectedUser = item.value; 
             } else if (dropdownId === 'dropdownDuration') {
                 durationTime = item.value !== undefined ? item.value : item; 
             } else if (dropdownId === 'dropdownLiberacao') {

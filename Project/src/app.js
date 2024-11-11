@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const { GetUsuarios, GetUsuarioByName} = require('./usuario');
+const { GetUsuarios, GetUsuario: GetUsuarioByName, GetUsuario} = require('./usuario');
 const {GerarContraSenha} = require('./gerarContraSenha'); // Importa ambas as funções
 
 
@@ -14,7 +14,7 @@ app.use(express.json()); // Necessário para processar JSON no body
 // Rota para buscar todos os clientes
 app.get('/usuarios', GetUsuarios);
 
-app.post('/usuarios/nome', GetUsuarioByName)
+app.post('/usuarios/nome', GetUsuario)
 
 app.post('/gerar-contrasenha', GerarContraSenha)
 

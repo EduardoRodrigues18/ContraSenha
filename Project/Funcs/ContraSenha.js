@@ -135,7 +135,7 @@ document.getElementById('BtnGerarContraSenha').addEventListener('click',async fu
     if (!durationTime) {
         exibirAlerta('Defina um tempo de duração!', 'danger');
     } else if (isValidContraSenha) {
-        exibirAlerta(`Contra-Senha Gerada: ${inputValue}<br>Tempo de duração: ${durationTime}`, 'success');
+        exibirAlerta(`Contra-Senha Gerada: ${inputValue}<br>Tempo de duração: ${durationTime} minuto(s)`, 'success');
         gerarContraSenha(selectedUser, durationTime, inputValue);
     } else {
         let contraSenha = randomContraSenha()

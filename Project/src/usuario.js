@@ -72,6 +72,8 @@ function GetUsuario(req, res) {
 
             const usuario = result[0];
             console.log('Usuário encontrado:', usuario);
+            console.log(usuario.USR_CODIGO)
+            setUsuario(usuario.USR_CODIGO)
 
             res.json({
                 message: 'Usuário encontrado!',

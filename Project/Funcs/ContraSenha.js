@@ -1,3 +1,5 @@
+const { getUsuario } = require("../src/usuario");
+
 let durationTime;
 let selectedUser;
 
@@ -37,7 +39,8 @@ function exibirAlerta(mensagem, tipo = 'danger') {
 
 async function buscarUsuarios() {
     try {
-        const response = await fetch('http://localhost:3000/usuarios');
+        console.log(getUsuario());
+        const response = await fetch('http://192.168.0.71:3000/usuarios');
         const data = await response.json();
 
         if (data.clientes && data.clientes.length > 0) {
@@ -95,7 +98,7 @@ function popularDropdown(items, dropdownId, valueKey = null) {
 
 async function gerarContraSenha(usuario, duracao, contraSenha) {
     try {
-        const response = await fetch('http://localhost:3000/gerar-contrasenha', {
+        const response = await fetch('http://192.168.0.71:3000/gerar-contrasenha', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

@@ -35,11 +35,12 @@ function exibirAlerta(mensagem, tipo = 'danger') {
     `;
 }
 document.getElementById('BtnSearchCPF').addEventListener('click', async function () {
-    var usernameValue = document.querySelector('input[placeholder="Usuario"]').value;
+    var usernameValue = document.querySelector('input[placeholder="Usuario"]').value.toUpperCase();
     var passwordValue = document.querySelector('input[placeholder="Senha"]').value;
     if(passwordValue.length<10){
         passwordValue = criptografar(passwordValue);
     }
+
 
 
     if (usernameValue === '') {
@@ -52,7 +53,7 @@ document.getElementById('BtnSearchCPF').addEventListener('click', async function
 
     console.log(passwordValue)
     try {
-        const response = await fetch('http://localhost:3000/usuarios/nome', {
+        const response = await fetch('http://192.168.0.71:3000/usuarios/nome', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

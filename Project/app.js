@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const { GetUsuarios, GetUsuario} = require('./src/usuario');
+const { GetUsuarios, GetUsuario, GetUsuarioAtual} = require('./src/usuario');
 const {GerarContraSenha} = require('./src/gerarContraSenha'); // Importa ambas as funções
 const path = require('path');
 
@@ -18,6 +18,7 @@ app.get('/usuarios', GetUsuarios);
 app.post('/usuarios/nome', GetUsuario)
 
 app.post('/gerar-contrasenha', GerarContraSenha)
+app.get('/usuario-atual', GetUsuarioAtual)
 
 app.listen(port, '192.168.0.71', () => {
     console.log(`Servidor rodando em http://localhost:${port}`);

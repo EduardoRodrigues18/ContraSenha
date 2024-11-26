@@ -66,8 +66,8 @@ document.getElementById('BtnSearchCPF').addEventListener('click', async function
 
         if (response.ok ) {
 
-            exibirAlerta('Login bem-sucedido! Redirecionando...', 'success');
-            setTimeout(() => window.location.href = "menu.html", 2000);
+            //exibirAlerta('Login bem-sucedido! Redirecionando...', 'success');
+            setTimeout(() => window.location.href = "menu.html");
             
         } else {
             exibirAlerta(data.message || 'Cliente não encontrado', 'danger');

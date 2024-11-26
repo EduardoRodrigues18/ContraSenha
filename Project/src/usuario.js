@@ -1,12 +1,9 @@
-const express = require('express');
 const connectToDatabase = require('./bd');
-const app = express();
-const port = 3000;
 
 let usuario = null;
 let usuarios = null;
 
-app.use(express.json());
+
 
 function setUsuario(valor) {
     usuario = valor;
@@ -23,7 +20,6 @@ function getUsuarios() {
     return usuarios;
 }
 
-// Função para buscar todos os clientes
 function GetUsuarios(req, res) {
     connectToDatabase((err, db) => {
         if (err) {
@@ -84,6 +80,16 @@ function GetUsuario(req, res) {
         });
     });
 }
+function GetUsuarioAtual(req, res) {
+    const usuarioAtual = getUsuario(); // Obtém o valor globalmente armazenado.
+
+    if (!usuarioAtual) {
+        return res.status(404).json({ message: 'Nenhum usuário encontrado!' });
+    }
+
+    res.json({ usuario: usuarioAtual });
+}
+
 
 
 
@@ -92,6 +98,7 @@ function GetUsuario(req, res) {
 module.exports = {
     GetUsuarios,
     GetUsuario,
+    GetUsuarioAtual,
     setUsuario,
     getUsuario
 };

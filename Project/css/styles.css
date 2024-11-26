@@ -68,6 +68,9 @@ body {
     overflow: hidden;
     padding: 4%;
 }
+.card-title {
+    font-size: 1.5rem; /* Ajuste o tamanho aqui */
+}
 
 #test {
     display: flex;

@@ -1,7 +1,8 @@
-const { getUsuario } = require("../src/usuario");
 
 let durationTime;
 let selectedUser;
+let selectedLiberacao;
+let usuariocod = null;
 
 const duracoes = [
     { label: "1 minuto", value: 1 },
@@ -39,7 +40,6 @@ function exibirAlerta(mensagem, tipo = 'danger') {
 
 async function buscarUsuarios() {
     try {
-        console.log(getUsuario());
         const response = await fetch('http://192.168.0.71:3000/usuarios');
         const data = await response.json();
 
@@ -63,6 +63,7 @@ async function buscarUsuarios() {
 function popularDropdown(items, dropdownId, valueKey = null) {
     const dropdownMenu = document.querySelector(`#${dropdownId} + .dropdown-menu`);
     dropdownMenu.innerHTML = '';
+    
 
     items.forEach(item => {
         const li = document.createElement('li');
@@ -81,6 +82,8 @@ function popularDropdown(items, dropdownId, valueKey = null) {
             document.getElementById(dropdownId).innerHTML = `<b>${linkItem.textContent}</b>`;
 
             if (dropdownId === 'dropdownUser') {
+                console.log(obterUsuarioAtual());
+
                 selectedUser = item.value; 
             } else if (dropdownId === 'dropdownDuration') {
                 durationTime = item.value !== undefined ? item.value : item; 
@@ -94,17 +97,40 @@ function popularDropdown(items, dropdownId, valueKey = null) {
     });
 }
 
+async function obterUsuarioAtual() {
+    try {
+        const response = await fetch('http://192.168.0.71:3000/usuario-atual');
+        if (response.ok) {
+            const data = await response.json();
+            return data.usuario; // Certifique-se de que "usuario" está correto
+        } else {
+            exibirAlerta('Erro ao obter o usuário atual', 'danger');
+            return null;
+        }
+    } catch (error) {
+        console.error('Erro ao buscar o usuário atual:', error);
+        exibirAlerta('Erro ao buscar o usuário atual!', 'danger');
+        return null;
+    }
+}
 
 
 async function gerarContraSenha(usuario, duracao, contraSenha) {
     try {
+        // Obter o código do usuário atual
+        usuariocod = await obterUsuarioAtual();
+        if (!usuariocod) { // Verifica se o código é válido
+            exibirAlerta('Erro: Usuário atual não encontrado!', 'danger');
+            return;
+        }
+
         const response = await fetch('http://192.168.0.71:3000/gerar-contrasenha', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                CSH_CODIGO: 1,
+                CSH_CODIGO: usuariocod,
                 CSH_CONTRASENHA: contraSenha,
                 CSH_DTHR_VALIDADE: duracao,
                 USR_UTILIZOU: usuario 
@@ -112,7 +138,8 @@ async function gerarContraSenha(usuario, duracao, contraSenha) {
         });
 
         if (response.ok) {
-            const data = await response.text(); 
+            const data = await response.text();
+            console.log('Resposta da API:', data);
         } else {
             const errorText = await response.text();
             exibirAlerta(errorText || 'Erro ao gerar contra-senha', 'danger');
@@ -124,6 +151,8 @@ async function gerarContraSenha(usuario, duracao, contraSenha) {
 }
 
 
+
+
 document.addEventListener('DOMContentLoaded', () => {
     buscarUsuarios();
     popularDropdown(duracoes, 'dropdownDuration');        
@@ -131,7 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
 });
 
-document.getElementById('BtnGerarContraSenha').addEventListener('click',async function () {
+document.getElementById('BtnGerarContraSenha').addEventListener('click', async function () {
     const inputValue = document.getElementById('InputContraSenha').value;
     const isValidContraSenha = validarContraSenha(inputValue);
 
@@ -139,10 +168,11 @@ document.getElementById('BtnGerarContraSenha').addEventListener('click',async fu
         exibirAlerta('Defina um tempo de duração!', 'danger');
     } else if (isValidContraSenha) {
         exibirAlerta(`Contra-Senha Gerada: ${inputValue}<br>Tempo de duração: ${durationTime} minuto(s)`, 'success');
-        gerarContraSenha(selectedUser, durationTime, inputValue);
+        await gerarContraSenha(selectedUser, durationTime, inputValue);
     } else {
-        let contraSenha = randomContraSenha()
+        let contraSenha = randomContraSenha();
         exibirAlerta(`Contra-Senha Gerada: ${contraSenha}<br>Tempo de duração: ${durationTime} minuto(s)`, 'success');
-        gerarContraSenha(selectedUser, durationTime, contraSenha);
+        await gerarContraSenha(selectedUser, durationTime, contraSenha);
     }
 });
+

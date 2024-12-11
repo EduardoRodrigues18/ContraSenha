@@ -67,6 +67,13 @@ document.getElementById('BtnSearchCPF').addEventListener('click', async function
         if (response.ok ) {
 
             //exibirAlerta('Login bem-sucedido! Redirecionando...', 'success');
+            const token = btoa(JSON.stringify({ user: usernameValue, time: Date.now() }));
+
+
+            // Armazenar o token no navegador
+            localStorage.setItem("authToken", token);
+        
+            // Redirecionar para o menu
             setTimeout(() => window.location.href = "menu.html");
             
         } else {

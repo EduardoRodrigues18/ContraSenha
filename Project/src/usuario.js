@@ -55,7 +55,7 @@ function GetUsuario(req, res) {
             return res.status(500).json({ error: 'Erro de conexão com o banco de dados' });
         }
 
-        db.query('SELECT USR_CODIGO FROM TAB_USUARIO WHERE USR_LOGIN = ? AND USR_SENHA = ?', [USR_LOGIN, USR_SENHA], (err, result) => {
+        db.query('SELECT * FROM TAB_USUARIO WHERE USR_LOGIN = ? AND USR_SENHA = ?', [USR_LOGIN, USR_SENHA], (err, result) => {
             if (err) {
                 db.detach();
                 return res.status(500).json({ error: 'Erro ao encontrar usuário', details: err.message });
@@ -67,6 +67,10 @@ function GetUsuario(req, res) {
             }
 
             const usuario = result[0];
+            if(usuario.USR_NIVELACESSO == "0" || usuario.USR_NIVELACESSO == "1" || usuario.USR_NIVELACESSO == "2"){
+                db.detach(); 
+                return res.status(404).json({ message: 'Usuário sem permissão para gerar contra-senha' });
+            }
             console.log('Usuário encontrado:', usuario);
             console.log(usuario.USR_CODIGO)
             setUsuario(usuario.USR_CODIGO)

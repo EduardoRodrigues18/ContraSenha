@@ -1,0 +1,31 @@
+<service>
+	<id>mynodeapp.exe</id>
+	<name>MyNodeApp</name>
+	<description>Este é um serviço Node.js rodando em segundo plano.</description>
+	<executable>C:\Program Files\nodejs\node.exe</executable>
+	<argument>--harmony</argument>
+	<argument>C:\Users\Usuário\Documents\GitHub\Front-ContraSenha\Project\node_modules\node-windows\lib\wrapper.js</argument>
+	<argument>--file</argument>
+	<argument>C:\Users\Usuário\Documents\GitHub\Front-ContraSenha\Project\app.js</argument>
+	<argument>--scriptoptions=</argument>
+	<argument>--log</argument>
+	<argument>MyNodeApp wrapper</argument>
+	<argument>--grow</argument>
+	<argument>0.5</argument>
+	<argument>--wait</argument>
+	<argument>2</argument>
+	<argument>--maxrestarts</argument>
+	<argument>3</argument>
+	<argument>--abortonerror</argument>
+	<argument>n</argument>
+	<argument>--stopparentfirst</argument>
+	<argument>undefined</argument>
+	<logmode>rotate</logmode>
+	<stoptimeout>30sec</stoptimeout>
+	<serviceaccount>
+		<domain>DESKTOP-HN9Q36F</domain>
+		<user>LocalSystem</user>
+		<password></password>
+	</serviceaccount>
+	<workingdirectory>C:\Users\Usuário\Documents\GitHub\Front-ContraSenha\Project</workingdirectory>
+</service>

@@ -4,16 +4,17 @@
   "bin": "./run.js",
   "pkg": {
     "targets": [
-      "node16-win-x64"
+      "node18-win-x64"
     ],
     "assets": [
       "project/*",
       "CONFIG.ini"
-      
     ],
-    "scripts": ["install-service.js"],
+    "scripts": [
+      "install-service.js"
+    ],
     "win": {
-      "window": false
+      "window": true
     }
   },
   "main": "./src/app.js",

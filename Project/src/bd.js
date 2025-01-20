@@ -1,14 +1,25 @@
+const fs = require('fs');
+const path = require('path');
+const ini = require('ini');
 const Firebird = require('node-firebird');
 
+// Caminho para o arquivo de configuração
+const configPath = path.join(__dirname, '../CONFIG.ini');
+
+// Carrega e processa o arquivo ini
+const configContent = fs.readFileSync(configPath, 'utf-8');
+const config = ini.parse(configContent);
+
+// Configurações do banco de dados
 const options = {
-    host: '192.168.0.71',
-    port: 3050,        
-    database: 'C:/Memoria/SisComInd/Dados/XISPONTOCOM.FDB', 
-    user: 'SYSDBA',
-    password: 'masterkey',
-    lowercase_keys: false, 
-    role: null,            
-    pageSize: 4096        
+    host: config.database.host,
+    port: parseInt(config.database.port, 10),
+    database: config.database.database,
+    user: config.database.user,
+    password: config.database.password,
+    lowercase_keys: false,
+    role: null,
+    pageSize: parseInt(config.database.pageSize, 10)
 };
 
 function connectToDatabase(callback) {

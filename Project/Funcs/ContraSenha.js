@@ -29,7 +29,57 @@ function randomContraSenha() {
     return Math.floor(Math.random() * 9000 + 1000);
 }
 
-function exibirAlerta(mensagem, tipo = 'danger') {
+function exibirAlerta(mensagem, tipo = 'danger', copiar = false) {
+    const alertContainer = document.getElementById('alertContainer');
+    alertContainer.innerHTML = `
+        <div class="alert alert-${tipo} alert-dismissible fade show text-center" role="alert">
+            <span id="contraSenhaText">${mensagem}</span>
+            ${copiar ? `<button id="btnCopy" class="btn btn-sm btn-success ms-2">Copiar</button>` : ''}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    `;
+
+    // Configurar botão de cópia se necessário
+    if (copiar) {
+        const btnCopy = document.getElementById('btnCopy');
+        btnCopy.addEventListener('click', () => {
+            const textToCopy = mensagem.replace('Contra-Senha Gerada: ', '').trim(); // Ajusta para copiar apenas o valor
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(textToCopy)
+                    .then(() => {
+                        
+                    })
+                    .catch(err => {
+                        console.error('Erro ao copiar com Clipboard API:', err);
+                        fallbackCopyTextToClipboard(textToCopy);
+                    });
+            } else {
+                fallbackCopyTextToClipboard(textToCopy);
+            }
+        });
+    }
+}
+
+function fallbackCopyTextToClipboard(text) {
+    const tempInput = document.createElement('textarea');
+    tempInput.value = text;
+    document.body.appendChild(tempInput);
+
+    // Selecionar o texto no elemento temporário
+    tempInput.select();
+    tempInput.setSelectionRange(0, 99999); // Compatibilidade com dispositivos móveis
+
+    try {
+        const successful = document.execCommand('copy');
+    } catch (err) {
+        console.error('Erro ao copiar com fallback:', err);
+        alert('Erro ao copiar contra-senha.');
+    } finally {
+        document.body.removeChild(tempInput);
+    }
+}
+
+function copyContraSenha(mensagem, tipo = 'danger') {
     document.getElementById('alertContainer').innerHTML = `
         <div class="alert alert-${tipo} alert-dismissible fade show text-center" role="alert">
             ${mensagem}
@@ -166,13 +216,45 @@ document.getElementById('BtnGerarContraSenha').addEventListener('click', async f
 
     if (!durationTime) {
         exibirAlerta('Defina um tempo de duração!', 'danger');
-    } else if (isValidContraSenha) {
-        exibirAlerta(`Contra-Senha Gerada: ${inputValue}<br>Tempo de duração: ${durationTime} minuto(s)`, 'success');
+    }
+    else if(inputValue.length>10){
+        exibirAlerta('Contra-senha deve conter no máximo 10 caracteres!', 'danger');
+    } 
+    else if (isValidContraSenha) {
+        exibirAlerta(`Contra-Senha Gerada: ${inputValue}`, 'success', true);
         await gerarContraSenha(selectedUser, durationTime, inputValue);
-    } else {
-        let contraSenha = randomContraSenha();
-        exibirAlerta(`Contra-Senha Gerada: ${contraSenha}<br>Tempo de duração: ${durationTime} minuto(s)`, 'success');
+    }
+    else {
+        const contraSenha = randomContraSenha();
+        exibirAlerta(`Contra-Senha Gerada: ${contraSenha}`, 'success', true);
         await gerarContraSenha(selectedUser, durationTime, contraSenha);
+    }
+});
+
+window.addEventListener("load", () => {
+    // Remover o token ao carregar a página
+
+
+    const token = localStorage.getItem("authToken");
+    localStorage.removeItem("authToken");
+
+    if (!token) {
+        window.location.href = "index.html";
+        return;
+    }
+
+    try {
+        const decoded = JSON.parse(atob(token));
+        const currentTime = Date.now();
+
+        if (currentTime - decoded.time > 30 * 60 * 1000) { // 30 minutos
+            localStorage.removeItem("authToken");
+            window.location.href = "index.html";
+        }
+    } catch (e) {
+        alert("Token inválido. Faça login novamente.");
+        localStorage.removeItem("authToken");
+        window.location.href = "index.html";
     }
 });
 

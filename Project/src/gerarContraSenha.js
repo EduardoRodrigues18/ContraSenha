@@ -30,11 +30,10 @@ function GerarContraSenha(req, res) {
             db.detach();
 
             if (err) {
-                console.error('Erro ao executar a query:', err);
-                return res.status(500).send('Erro ao executar a query');
+                console.error('Erro ao salvar Contra Senha:', err);
+                return res.status(500).send('Erro ao salvar Contra Senha');
             }
 
-            res.send('Query executada com sucesso');
         });
     });
 }

@@ -32,7 +32,8 @@
     "ini": "^5.0.0",
     "node-firebird": "^1.1.9",
     "node-windows": "^1.0.0-beta.8",
-    "nodemon": "^3.1.7"
+    "nodemon": "^3.1.7",
+    "winreg": "^1.2.5"
   },
   "devDependencies": {
     "parcel": "^2.13.0"

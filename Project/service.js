@@ -1,18 +1,14 @@
-const Service = require('node-windows').Service;
+const { Service } = require('node-windows');
+const path = require('path');
 
-// Criação de um novo serviço
-const servico = new Service({
-  name: 'MeuServicoNode', // Nome do serviço
-  description: 'Serviço Node.js para rodar a aplicação.', // Descrição do serviço
-  script: './app.js', // Caminho para o script principal
-  nodeOptions: ['--harmony', '--max_old_space_size=4096'], // (Opcional) Opções para o Node.js
+const svc = new Service({
+  name: 'Front-ContraSenha Service',
+  description: 'Serviço que inicia e mantém o app.js rodando',
+  script: path.join(__dirname, 'app.js')
 });
 
-// Evento para registrar o serviço com sucesso
-servico.on('install', () => {
-  console.log('Serviço instalado com sucesso!');
-  servico.start(); // Inicia o serviço automaticamente após a instalação
+svc.on('install', () => {
+  svc.start();
 });
 
-// Registra o serviço
-servico.install();
+svc.install();

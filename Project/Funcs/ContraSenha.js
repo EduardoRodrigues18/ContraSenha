@@ -152,6 +152,7 @@ async function obterUsuarioAtual() {
         const response = await fetch('http://192.168.0.71:3000/usuario-atual');
         if (response.ok) {
             const data = await response.json();
+            usuariocod = data.usuario;
             return data.usuario; // Certifique-se de que "usuario" está correto
         } else {
             exibirAlerta('Erro ao obter o usuário atual', 'danger');
@@ -165,10 +166,10 @@ async function obterUsuarioAtual() {
 }
 
 
-async function gerarContraSenha(usuario, duracao, contraSenha) {
+async function gerarContraSenha(contraSenha) {
     try {
         // Obter o código do usuário atual
-        usuariocod = await obterUsuarioAtual();
+        //usuariocod = await obterUsuarioAtual();
         if (!usuariocod) { // Verifica se o código é válido
             exibirAlerta('Erro: Usuário atual não encontrado!', 'danger');
             return;
@@ -181,9 +182,11 @@ async function gerarContraSenha(usuario, duracao, contraSenha) {
             },
             body: JSON.stringify({
                 CSH_CODIGO: usuariocod,
+                USR_CRIOU: usuariocod,
+                CSH_LIBERACAO: selectedLiberacao,
                 CSH_CONTRASENHA: contraSenha,
-                CSH_DTHR_VALIDADE: duracao,
-                USR_UTILIZOU: usuario 
+                CSH_DTHR_VALIDADE: durationTime,
+                USR_UTILIZOU: selectedUser 
             })
         });
 
@@ -222,12 +225,12 @@ document.getElementById('BtnGerarContraSenha').addEventListener('click', async f
     } 
     else if (isValidContraSenha) {
         exibirAlerta(`Contra-Senha Gerada: ${inputValue}`, 'success', true);
-        await gerarContraSenha(selectedUser, durationTime, inputValue);
+        await gerarContraSenha(inputValue);
     }
     else {
         const contraSenha = randomContraSenha();
         exibirAlerta(`Contra-Senha Gerada: ${contraSenha}`, 'success', true);
-        await gerarContraSenha(selectedUser, durationTime, contraSenha);
+        await gerarContraSenha(contraSenha);
     }
 });
 

@@ -14,27 +14,27 @@ const config = ini.parse(configContent);
 const options = {
     host: config.database.host,
     port: parseInt(config.database.port, 10),
-    database: config.database.database,
+    database: config.database.database.replace(/\\/g, '/'), // Normaliza o caminho do banco
     user: config.database.user,
     password: config.database.password,
     lowercase_keys: false,
     role: null,
-    pageSize: parseInt(config.database.pageSize, 10)
+    pageSize: parseInt(config.database.pageSize, 10),
+    poolSize: 5 // Adiciona um pool de conexões para melhor performance
 };
 
+// Criando um pool de conexões
+const pool = Firebird.pool(5, options);
+
 function connectToDatabase(callback) {
-    try {
-        Firebird.attach(options, function (err, db) {
-            if (err) {
-                console.error('Erro ao conectar ao banco de dados:', err);  
-                return callback(err);
-            }
-            callback(null, db);
-        });
-    } catch (error) {
-        console.error('Erro inesperado:', error);  
-        callback(error);  
-    }
+    pool.get((err, db) => {
+        if (err) {
+            console.error('Erro ao conectar ao banco de dados:', err);
+            return callback(err);
+        }
+
+        callback(null, db);
+    });
 }
 
 module.exports = connectToDatabase;

@@ -3,6 +3,13 @@ let durationTime;
 let selectedUser;
 let selectedLiberacao;
 let usuariocod = null;
+const ini = require('ini');
+// Caminho para o arquivo de configuração
+const configPath = path.join(__dirname, '../CONFIG.ini');
+
+// Carrega e processa o arquivo ini
+const configContent = fs.readFileSync(configPath, 'utf-8');
+const config = ini.parse(configContent);
 
 const duracoes = [
     { label: "1 minuto", value: 1 },
@@ -90,7 +97,7 @@ function copyContraSenha(mensagem, tipo = 'danger') {
 
 async function buscarUsuarios() {
     try {
-        const response = await fetch('http://192.168.0.71:3000/usuarios');
+        const response = await fetch(config.API.url + '/usuarios');
         const data = await response.json();
 
         if (data.clientes && data.clientes.length > 0) {
@@ -149,7 +156,7 @@ function popularDropdown(items, dropdownId, valueKey = null) {
 
 async function obterUsuarioAtual() {
     try {
-        const response = await fetch('http://192.168.0.71:3000/usuario-atual');
+        const response = await fetch(config.API.url + '/usuario-atual');
         if (response.ok) {
             const data = await response.json();
             usuariocod = data.usuario;
@@ -175,7 +182,7 @@ async function gerarContraSenha(contraSenha) {
             return;
         }
 
-        const response = await fetch('http://192.168.0.71:3000/gerar-contrasenha', {
+        const response = await fetch(config.API.url + '/gerar-contrasenha', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -250,7 +257,7 @@ window.addEventListener("load", () => {
         const decoded = JSON.parse(atob(token));
         const currentTime = Date.now();
 
-        if (currentTime - decoded.time > 30 * 60 * 1000) { // 30 minutos
+        if (currentTime - decoded.time > 30 * 60 * 1000) {
             localStorage.removeItem("authToken");
             window.location.href = "index.html";
         }

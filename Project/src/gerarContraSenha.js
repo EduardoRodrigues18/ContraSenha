@@ -1,8 +1,6 @@
 
 const express = require('express');
 const connectToDatabase = require('./bd');
-const app = express();
-const port = 3000;
 
 function GerarContraSenha(req, res) {
     const { CSH_CODIGO, USR_CRIOU, CSH_LIBERACAO, CSH_CONTRASENHA, CSH_DTHR_VALIDADE, USR_UTILIZOU } = req.body;

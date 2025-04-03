@@ -1,4 +1,12 @@
 
+const ini = require('ini');
+// Caminho para o arquivo de configuração
+const configPath = path.join(__dirname, '../CONFIG.ini');
+
+// Carrega e processa o arquivo ini
+const configContent = fs.readFileSync(configPath, 'utf-8');
+const config = ini.parse(configContent);
+
 function criptografar(palavra) {
     let palavraInvertida = palavra.split('').reverse().join('');
     
@@ -53,7 +61,7 @@ document.getElementById('BtnSearchCPF').addEventListener('click', async function
 
     console.log(passwordValue)
     try {
-        const response = await fetch('http://192.168.0.71:3000/usuarios/nome', {
+        const response = await fetch(config.API.url + '/usuarios/nome', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

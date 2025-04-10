@@ -1,12 +1,4 @@
 
-const ini = require('ini');
-// Caminho para o arquivo de configuração
-const configPath = path.join(__dirname, '../CONFIG.ini');
-
-// Carrega e processa o arquivo ini
-const configContent = fs.readFileSync(configPath, 'utf-8');
-const config = ini.parse(configContent);
-
 function criptografar(palavra) {
     let palavraInvertida = palavra.split('').reverse().join('');
     
@@ -59,9 +51,9 @@ document.getElementById('BtnSearchCPF').addEventListener('click', async function
         return exibirAlerta('Informe a senha');
     }
 
-    console.log(passwordValue)
     try {
-        const response = await fetch(config.API.url + '/usuarios/nome', {
+        console.log("Teste")
+        const response = await fetch('http://201.159.85.171:3090/usuarios/nome', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -88,6 +80,7 @@ document.getElementById('BtnSearchCPF').addEventListener('click', async function
             exibirAlerta(data.message || 'Cliente não encontrado', 'danger');
         }
     } catch (error) {
+        console.log(error)
         exibirAlerta('Erro ao buscar clientes!', 'danger');
     }
 });

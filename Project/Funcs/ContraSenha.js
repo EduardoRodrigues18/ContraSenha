@@ -3,13 +3,8 @@ let durationTime;
 let selectedUser;
 let selectedLiberacao;
 let usuariocod = null;
-const ini = require('ini');
-// Caminho para o arquivo de configuração
-const configPath = path.join(__dirname, '../CONFIG.ini');
+let contraSenhaID = null;
 
-// Carrega e processa o arquivo ini
-const configContent = fs.readFileSync(configPath, 'utf-8');
-const config = ini.parse(configContent);
 
 const duracoes = [
     { label: "1 minuto", value: 1 },
@@ -97,7 +92,7 @@ function copyContraSenha(mensagem, tipo = 'danger') {
 
 async function buscarUsuarios() {
     try {
-        const response = await fetch(config.API.url + '/usuarios');
+        const response = await fetch('http://201.159.85.171:3090/usuarios');
         const data = await response.json();
 
         if (data.clientes && data.clientes.length > 0) {
@@ -156,7 +151,7 @@ function popularDropdown(items, dropdownId, valueKey = null) {
 
 async function obterUsuarioAtual() {
     try {
-        const response = await fetch(config.API.url + '/usuario-atual');
+        const response = await fetch('http://201.159.85.171:3090/usuario-atual');
         if (response.ok) {
             const data = await response.json();
             usuariocod = data.usuario;
@@ -175,20 +170,17 @@ async function obterUsuarioAtual() {
 
 async function gerarContraSenha(contraSenha) {
     try {
-        // Obter o código do usuário atual
-        //usuariocod = await obterUsuarioAtual();
-        if (!usuariocod) { // Verifica se o código é válido
+        if (!usuariocod) { 
             exibirAlerta('Erro: Usuário atual não encontrado!', 'danger');
             return;
         }
-
-        const response = await fetch(config.API.url + '/gerar-contrasenha', {
+        let response = await fetch('http://201.159.85.171:3090/gerar-contrasenha', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                CSH_CODIGO: usuariocod,
+                CSH_CODIGO: contraSenhaID,
                 USR_CRIOU: usuariocod,
                 CSH_LIBERACAO: selectedLiberacao,
                 CSH_CONTRASENHA: contraSenha,
@@ -226,20 +218,30 @@ document.getElementById('BtnGerarContraSenha').addEventListener('click', async f
 
     if (!durationTime) {
         exibirAlerta('Defina um tempo de duração!', 'danger');
+        return;
     }
-    else if(inputValue.length>10){
+
+    if (inputValue.length > 10) {
         exibirAlerta('Contra-senha deve conter no máximo 10 caracteres!', 'danger');
-    } 
-    else if (isValidContraSenha) {
-        exibirAlerta(`Contra-Senha Gerada: ${inputValue}`, 'success', true);
-        await gerarContraSenha(inputValue);
+        return;
     }
-    else {
-        const contraSenha = randomContraSenha();
+
+    try {
+        // Buscar o ID gerado antes de tudo
+        const response = await fetch('http://201.159.85.171:3090/gen-contra-senhaid');
+        const data = await response.json();
+        contraSenhaID = data.id;
+
+        const contraSenha = isValidContraSenha ? inputValue : randomContraSenha();
         exibirAlerta(`Contra-Senha Gerada: ${contraSenha}`, 'success', true);
+
         await gerarContraSenha(contraSenha);
+    } catch (error) {
+        console.error('Erro ao gerar ID da contra-senha:', error);
+        exibirAlerta('Erro ao gerar ID da contra-senha!', 'danger');
     }
 });
+
 
 window.addEventListener("load", () => {
     // Remover o token ao carregar a página
@@ -257,7 +259,7 @@ window.addEventListener("load", () => {
         const decoded = JSON.parse(atob(token));
         const currentTime = Date.now();
 
-        if (currentTime - decoded.time > 30 * 60 * 1000) {
+        if (currentTime - decoded.time > 30 * 60 * 1000) { // 30 minutos
             localStorage.removeItem("authToken");
             window.location.href = "index.html";
         }

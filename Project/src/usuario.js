@@ -29,6 +29,7 @@ function GetUsuarios(req, res) {
         db.query('SELECT USR_CODIGO, USR_LOGIN FROM TAB_USUARIO', (err, result) => {
             if (err) {
                 db.detach();
+                console.log(err)
                 return res.status(500).json({ error: 'Erro ao buscar clientes', details: err.message });
             }
 

@@ -1,40 +1,4 @@
-Servidor rodando em http://localhost:3000
-Usuário encontrado: {
-  USR_CODIGO: 1,
-  USR_NOME: 'ADMINISTRADOR DO SISTEMA',
-  USR_LOGIN: 'ADMIN',
-  USR_SENHA: '054053049050108105077',
-  USR_NIVELACESSO: '4',
-  USR_CORFUNDO: 16777215,
-  USR_CORCAMPOS: 14667720,
-  USR_IMAGEM: '',
-  USR_MAXIMIZADO: 'N',
-  USR_LARGURA: 50,
-  USR_ALTURA: 50,
-  USR_TOPO: 0,
-  USR_ESQUERDA: 0,
-  USR_ONLINE: null,
-  USR_STATUS: null,
-  USR_IP: null,
-  USR_IMP: '',
-  USR_EMP: null,
-  USR_TROCASENHA: null,
-  USR_PCOMISSAO: 0,
-  USR_TXMINIMA: 0,
-  DVS_CODIGO: null,
-  USR_VISUVENCEXP: 0,
-  USR_ALERTAS: null,
-  USR_EMAIL: '',
-  USR_WHATSAPP: '',
-  USR_MANUTVEIC: null,
-  USR_REABREP: null,
-  USR_LOCAL_ESTOQUE: 0,
-  USR_VISUCAIXAS: null,
-  USR_TODOSCLI: null,
-  USR_CAIXA: null,
-  USR_ALTDTFECHA: null
-}
-1
+Servidor rodando em http://localhost:3090
 [
   { USR_CODIGO: 1, USR_LOGIN: 'ADMIN' },
   { USR_CODIGO: 2, USR_LOGIN: 'IAGO' },

@@ -20,7 +20,7 @@ app.get('/gen-contra-senhaid', GerarContraSenhaID)
 app.post('/gerar-contrasenha', GerarContraSenha)
 app.get('/usuario-atual', GetUsuarioAtual)
 
-app.listen(port, '192.168.0.200', () => {
+app.listen(port, '192.168.0.71', () => {
     console.log(`Servidor rodando em http://localhost:${port}`);
 });
 app.get('/', (req, res) => {

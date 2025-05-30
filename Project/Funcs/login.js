@@ -53,7 +53,7 @@ document.getElementById('BtnSearchCPF').addEventListener('click', async function
 
     try {
         console.log("Teste")
-        const response = await fetch('https://memoriainfo.ddns.net:3090/usuarios/nome', {
+        const response = await fetch('http://192.168.0.71:3090/usuarios/nome', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

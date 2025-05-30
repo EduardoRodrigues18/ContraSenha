@@ -92,7 +92,7 @@ function copyContraSenha(mensagem, tipo = 'danger') {
 
 async function buscarUsuarios() {
     try {
-        const response = await fetch('https://memoriainfo.ddns.net:3090/usuarios');
+        const response = await fetch('http://192.168.0.71:3090/usuarios');
         const data = await response.json();
 
         if (data.clientes && data.clientes.length > 0) {
@@ -151,7 +151,7 @@ function popularDropdown(items, dropdownId, valueKey = null) {
 
 async function obterUsuarioAtual() {
     try {
-        const response = await fetch('https://memoriainfo.ddns.net:3090/usuario-atual');
+        const response = await fetch('http://192.168.0.71:3090/usuario-atual');
         if (response.ok) {
             const data = await response.json();
             usuariocod = data.usuario;
@@ -174,7 +174,7 @@ async function gerarContraSenha(contraSenha) {
             exibirAlerta('Erro: Usuário atual não encontrado!', 'danger');
             return;
         }
-        let response = await fetch('https://memoriainfo.ddns.net:3090/gerar-contrasenha', {
+        let response = await fetch('http://192.168.0.71:3090/gerar-contrasenha', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -228,7 +228,7 @@ document.getElementById('BtnGerarContraSenha').addEventListener('click', async f
 
     try {
         // Buscar o ID gerado antes de tudo
-        const response = await fetch('https://memoriainfo.ddns.net:3090/gen-contra-senhaid');
+        const response = await fetch('http://192.168.0.71:3090/gen-contra-senhaid');
         const data = await response.json();
         contraSenhaID = data.id;
 
